@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 import optimizelySdk from '@optimizely/optimizely-sdk';
 import { v4 } from 'uuid';
 
-const loadOptimizely = async () => {
+const loadOptimizely = async (setDone: (done: boolean) => void) => {
   try {
     console.log('uuid: ' + v4());
 
@@ -32,6 +32,7 @@ const loadOptimizely = async () => {
     const decision = user.decideAll();
 
     console.log(decision);
+    setDone(true);
   } catch (e) {
     console.error('Unable to load Optimizely.');
     console.error(e);
@@ -39,16 +40,18 @@ const loadOptimizely = async () => {
 };
 
 function App() {
+  const [done, setDone] = useState(false);
+
   useEffect(() => {
-    loadOptimizely();
-  });
+    loadOptimizely(setDone);
+  }, []);
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          {done ? 'test done, please check console' : 'testing sdk'}
         </p>
         <a
           className="App-link"
